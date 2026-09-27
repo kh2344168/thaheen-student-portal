@@ -62,8 +62,11 @@ Run `npm test -- --watch=false`. The unit tests cover the 90% completion rule, s
 - Sample videos are short diagram animations and are reused between lessons on the same topic.
 - Keyboard shortcut and browser fullscreen behavior can vary slightly by browser; standard controls remain available.
 - An end-to-end browser suite is not included. The build and unit tests were run after the optional features were added.
-- **Ideas for more time (not implemented):** replace the synthetic English samples with licensed Arabic health-sciences narration and captions; add optional, brief multiple-choice recall checks at meaningful points in a lesson; and test the bilingual and dark themes across more browsers and mobile devices, including an accessibility review.
-- I would validate the recall checks with students before shipping them. I would place them at topic transitions rather than interrupting on a fixed timer, then use learner feedback and results to decide whether any follow-up prompt is useful.
+- With more time, I would replace the sample English narration with licensed Arabic health-sciences narration and captions, and test the bilingual and dark themes across more browsers and mobile devices, including an accessibility review.
+
+## Future learning ideas (not implemented)
+
+I would explore comprehension checks within long videos, an interactive recap after lessons, and an optional voice or writing activity for students to explain what they learned. The rationale and a small validation plan are in [FUTURE-IDEAS.md](./FUTURE-IDEAS.md). Any AI-assisted feedback would need a secure service beyond the scope of this offline task.
 
 ## Time spent
 

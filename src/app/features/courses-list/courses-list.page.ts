@@ -22,11 +22,15 @@ export class CoursesListPage implements OnInit {
 
   readonly cards = computed(() =>
     filterCoursesBySearch(this.courseData.courses(), this.searchTerm(), this.i18n.language()).map(
-      (course) => ({
-        course,
-        lessonCount: flattenLessons(course).length,
-        progress: this.progress.getCourseProgress(course),
-      }),
+      (course) => {
+        const lessons = flattenLessons(course);
+        return {
+          course,
+          lessonCount: lessons.length,
+          totalDurationSec: lessons.reduce((total, lesson) => total + lesson.durationSec, 0),
+          progress: this.progress.getCourseProgress(course),
+        };
+      },
     ),
   );
 

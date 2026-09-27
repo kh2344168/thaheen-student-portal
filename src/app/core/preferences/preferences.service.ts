@@ -124,7 +124,7 @@ export class PreferencesService {
     root.dir = this.direction();
     root.dataset['theme'] = this.theme();
     this.document.title =
-      this.language() === 'en' ? 'Thaheen | Learning Portal' : 'ثهين | بوابة التعلم';
+      this.language() === 'en' ? 'Thaheen | Learning Portal' : 'ذهين | بوابة التعلم';
     const themeColor = this.document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     themeColor?.setAttribute('content', this.theme() === 'dark' ? '#19151d' : '#f7f5ef');
   }

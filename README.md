@@ -40,7 +40,7 @@ npm test -- --watch=false
 
 ## Bundled content and assumptions
 
-`src/assets/data/courses.json` has two courses, two sections per course, and five lessons per course. Three original, locally rendered 95-second MP4 infographic animations and three SVG thumbnails are bundled in `src/assets`. Each video is Arabic-labeled, 1280×720, and under 1 MB. The same clip is reused among lessons in its topic to stay within the 2–3 video constraint; each clip gives a short overview rather than a separate full lecture. The Arabic narration scripts and their medical references are in [`ARABIC-LESSON-SCRIPTS.md`](./ARABIC-LESSON-SCRIPTS.md). Voiceover has not yet been added to this working copy.
+`src/assets/data/courses.json` has two courses, two sections per course, and five lessons per course. Three original, locally rendered 95-second MP4 infographic animations and three SVG thumbnails are bundled in `src/assets`. Each video is Arabic-labeled, 1280×720, and under 2.3 MB. The same clip is reused among lessons in its topic to stay within the 2–3 video constraint; each clip gives a short overview rather than a separate full lecture. The Arabic narration scripts and their medical references are in [`ARABIC-LESSON-SCRIPTS.md`](./ARABIC-LESSON-SCRIPTS.md). bones.mp4 is silent; heart.mp4 and blood.mp4 contain sample English narration. Arabic voiceover is not included in this version.
 
 The animation source is [`tools/render_arabic_lesson_videos.py`](./tools/render_arabic_lesson_videos.py). Re-rendering it requires Pillow with Arabic text shaping and FFmpeg with `libx264`; these are content-authoring tools and are not needed to run the Angular app.
 

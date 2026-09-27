@@ -3,7 +3,7 @@ import { Course, CourseSection, Lesson, LessonStatus } from '../models/course.mo
 import { AppLanguage, PreferencesService } from '../preferences/preferences.service';
 
 const ARABIC_TEXT = {
-  brandName: 'ثهين',
+  brandName: 'ذهين',
   brandSubtitle: 'مساحة التعلّم',
   courses: 'المقررات',
   journey: 'رحلتك التعليمية',

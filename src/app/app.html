@@ -1,0 +1,79 @@
+<div class="app-frame" [attr.dir]="i18n.direction()">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a
+        class="brand"
+        routerLink="/courses"
+        [attr.aria-label]="i18n.t('brandName') + ', ' + i18n.t('courses')"
+      >
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path
+              d="M8 6c9 0 7 20 16 20M24 6C15 6 17 26 8 26"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+            />
+            <path
+              d="M10 10h12M9 16h14M10 22h12"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        <span class="brand__copy">
+          <strong>{{ i18n.t('brandName') }}</strong>
+          <small>{{ i18n.t('brandSubtitle') }}</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" [attr.aria-label]="i18n.t('courses')">
+        <a
+          routerLink="/courses"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ i18n.t('courses') }}</a
+        >
+        <span class="main-nav__note">{{ i18n.t('journey') }}</span>
+      </nav>
+
+      <div class="header-actions">
+        <button
+          class="header-toggle"
+          type="button"
+          [attr.aria-label]="
+            preferences.theme() === 'dark' ? i18n.t('enableLightMode') : i18n.t('enableDarkMode')
+          "
+          [title]="
+            preferences.theme() === 'dark' ? i18n.t('enableLightMode') : i18n.t('enableDarkMode')
+          "
+          (click)="preferences.toggleTheme()"
+        >
+          <span aria-hidden="true">{{ preferences.theme() === 'dark' ? '☼' : '☾' }}</span>
+        </button>
+        <button
+          class="header-toggle language-toggle"
+          type="button"
+          [attr.aria-label]="i18n.t('switchLanguageAria')"
+          (click)="preferences.toggleLanguage()"
+        >
+          {{ i18n.t('switchLanguage') }}
+        </button>
+        <div class="profile-chip" [attr.aria-label]="i18n.t('student')">
+          <span class="profile-chip__avatar">{{ i18n.language() === 'ar' ? 'خ' : 'K' }}</span>
+          <span class="profile-chip__name">{{ i18n.t('student') }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet />
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-mark" aria-hidden="true">✳</span>
+    <span>{{ i18n.t('footerQuote') }}</span>
+  </footer>
+</div>

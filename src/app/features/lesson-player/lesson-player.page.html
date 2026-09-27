@@ -1,0 +1,345 @@
+@if (courseData.status() === 'loading' || courseData.status() === 'idle') {
+  <app-ui-state
+    kind="loading"
+    [title]="i18n.t('lessonLoadingTitle')"
+    [message]="i18n.t('lessonLoadingMessage')"
+  />
+} @else if (courseData.status() === 'error') {
+  <app-ui-state
+    kind="error"
+    [title]="i18n.t('lessonErrorTitle')"
+    [message]="i18n.t('coursesErrorMessage')"
+    [actionLabel]="i18n.t('retry')"
+    (action)="courseData.retry()"
+  />
+} @else if (!course() || !lesson()) {
+  <app-ui-state
+    kind="not-found"
+    [title]="i18n.t('lessonNotFoundTitle')"
+    [message]="i18n.t('lessonNotFoundMessage')"
+  />
+} @else {
+  @if (course(); as item) {
+    @if (lesson(); as currentLesson) {
+      <div class="player-page">
+        <nav class="breadcrumbs" [attr.aria-label]="i18n.t('breadcrumbs')">
+          <a routerLink="/courses">{{ i18n.t('courses') }}</a
+          ><span aria-hidden="true">›</span>
+          <a [routerLink]="['/courses', item.id]">{{ i18n.courseTitle(item) }}</a
+          ><span aria-hidden="true">›</span>
+          <span>{{ i18n.lessonTitle(currentLesson) }}</span>
+        </nav>
+
+        <div class="player-heading">
+          <div>
+            <span class="player-kicker">{{
+              i18n.sectionTitle(lessonRows()[activeIndex()].section)
+            }}</span>
+            <h1>{{ i18n.lessonTitle(currentLesson) }}</h1>
+            <p>
+              {{ i18n.instructorName(item) }} <span>·</span> {{ i18n.t('lessonDuration') }}
+              {{ formatDuration(currentLesson.durationSec) }}
+            </p>
+          </div>
+          <a class="back-to-course" [routerLink]="['/courses', item.id]"
+            ><span aria-hidden="true">{{ i18n.direction() === 'rtl' ? '→' : '←' }}</span>
+            {{ i18n.t('backToCourse') }}</a
+          >
+        </div>
+
+        <div class="player-layout">
+          <section class="player-main" [attr.aria-label]="i18n.t('lessonLoadingTitle')">
+            <div #playerShell class="video-shell" [class.video-shell--fullscreen]="isFullscreen()">
+              <video
+                #videoElement
+                class="lesson-video"
+                [class.lesson-video--hidden]="videoError()"
+                [src]="currentLesson.video"
+                [poster]="item.thumbnail"
+                preload="metadata"
+                playsinline
+                (loadedmetadata)="onMetadata(videoElement)"
+                (timeupdate)="onTimeUpdate(videoElement)"
+                (play)="onPlay()"
+                (pause)="onPause(videoElement)"
+                (ended)="onEnded(videoElement)"
+                (error)="onVideoError(videoElement)"
+              >
+                {{ i18n.t('unsupportedVideo') }}
+              </video>
+              @if (videoError()) {
+                <div class="video-error" role="alert">
+                  <span class="video-error__icon" aria-hidden="true">!</span>
+                  <h2>{{ i18n.t('videoUnavailable') }}</h2>
+                  <p>{{ i18n.t('videoUnavailableMessage') }}</p>
+                  <button
+                    type="button"
+                    class="video-error__retry"
+                    (click)="retryVideo(videoElement)"
+                  >
+                    {{ i18n.t('retry') }}
+                  </button>
+                </div>
+              } @else {
+                <div class="video-caption">
+                  <span>{{ i18n.t('localVideoLabel') }}</span>
+                  <span>{{ i18n.t('audioDemoLabel') }}</span>
+                </div>
+                <div class="video-controls">
+                  <div class="seek-row">
+                    <span dir="ltr">{{ currentTimeLabel() }}</span>
+                    <div class="seek-control">
+                      <span class="seek-control__track" aria-hidden="true"
+                        ><span [style.width.%]="seekPercent()"></span
+                      ></span>
+                      <span
+                        class="seek-control__threshold"
+                        [style.inset-inline-start]="completionMarkerPercent + '%'"
+                        aria-hidden="true"
+                        ><span>{{ completionMarkerPercent }}%</span></span
+                      >
+                      <input
+                        type="range"
+                        min="0"
+                        [max]="duration() || currentLesson.durationSec"
+                        step="0.1"
+                        [value]="currentTime()"
+                        [attr.dir]="i18n.direction()"
+                        [attr.aria-label]="i18n.t('seekPosition')"
+                        (input)="seek($event, videoElement)"
+                      />
+                    </div>
+                    <span dir="ltr">{{ durationLabel() }}</span>
+                  </div>
+                  <div class="controls-row">
+                    <div class="controls-row__group">
+                      <button
+                        class="control-button control-button--play"
+                        type="button"
+                        [attr.aria-label]="isPlaying() ? i18n.t('pause') : i18n.t('playVideo')"
+                        (click)="togglePlayback(videoElement)"
+                      >
+                        @if (isPlaying()) {
+                          <span aria-hidden="true">Ⅱ</span>
+                        } @else {
+                          <span class="play-triangle" aria-hidden="true">▶</span>
+                        }
+                      </button>
+                      <span class="control-hint">{{
+                        isPlaying() ? i18n.t('pause') : i18n.t('play')
+                      }}</span>
+                    </div>
+                    <div class="controls-row__group controls-row__end">
+                      <label class="speed-control"
+                        >{{ i18n.t('playbackSpeed') }}
+                        <select
+                          aria-label="{{ i18n.t('playbackSpeed') }}"
+                          [value]="playbackRate()"
+                          (change)="changeSpeed($event, videoElement)"
+                        >
+                          <option value="1">1x</option>
+                          <option value="1.25">1.25x</option>
+                          <option value="1.5">1.5x</option>
+                          <option value="2">2x</option>
+                        </select>
+                      </label>
+                      <button
+                        class="control-button control-button--audio"
+                        type="button"
+                        [attr.aria-label]="isMuted() ? i18n.t('unmuteAudio') : i18n.t('muteAudio')"
+                        [title]="isMuted() ? i18n.t('unmuteAudio') : i18n.t('muteAudio')"
+                        (click)="toggleMute(videoElement)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M4 10v4h4l5 4V6l-5 4H4Z"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linejoin="round"
+                          />
+                          @if (isMuted()) {
+                            <path
+                              d="m17 9 4 6m0-6-4 6"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                            />
+                          } @else {
+                            <path
+                              d="M16 9a4 4 0 0 1 0 6m2-8a7 7 0 0 1 0 10"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                            />
+                          }
+                        </svg>
+                      </button>
+                      <button
+                        class="control-button control-button--fullscreen"
+                        type="button"
+                        [attr.aria-label]="
+                          isFullscreen() ? i18n.t('exitFullscreen') : i18n.t('fullscreen')
+                        "
+                        (click)="toggleFullscreen(playerShell)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="keyboard-hint">{{ i18n.t('keyboardHint') }}</p>
+                </div>
+              }
+            </div>
+
+            @if (justCompleted()) {
+              <div class="completed-note" role="status">
+                <span>✓</span>
+                <p>
+                  <strong>{{ i18n.t('completionTitle') }}</strong> {{ i18n.t('completionMessage') }}
+                </p>
+              </div>
+            }
+
+            <div class="player-bottom">
+              <div class="lesson-summary">
+                <span class="summary-mark" aria-hidden="true">✳</span>
+                <div>
+                  <h2>{{ i18n.t('aboutLesson') }}</h2>
+                  <p>{{ i18n.t('lessonSummary') }}</p>
+                </div>
+              </div>
+              <button
+                class="next-button"
+                type="button"
+                [disabled]="!isCompleted()"
+                (click)="navigateToNext()"
+              >
+                <span>
+                  <small>{{
+                    nextLesson()
+                      ? isCompleted()
+                        ? i18n.t('nextReady')
+                        : i18n.t('nextLocked')
+                      : isCompleted()
+                        ? i18n.t('allLessonsDone')
+                        : i18n.t('finishLessonFirst')
+                  }}</small>
+                  <strong>{{
+                    nextLesson() ? i18n.t('nextLesson') : i18n.t('backToCourseAction')
+                  }}</strong>
+                </span>
+                <span class="next-button__arrow" aria-hidden="true">{{
+                  i18n.direction() === 'rtl' ? '←' : '→'
+                }}</span>
+              </button>
+            </div>
+
+            <section class="lesson-notes" aria-labelledby="lesson-notes-title">
+              <div class="lesson-notes__heading">
+                <div>
+                  <h2 id="lesson-notes-title">{{ i18n.t('lessonNotes') }}</h2>
+                  <p>{{ i18n.t('noteSaved') }}</p>
+                </div>
+                <span>{{ i18n.t('noteLimit') }}</span>
+              </div>
+              <textarea
+                maxlength="4000"
+                [attr.dir]="i18n.direction()"
+                [value]="noteText()"
+                [placeholder]="i18n.t('notePlaceholder')"
+                [attr.aria-label]="i18n.t('lessonNotes')"
+                (input)="onNoteInput($event)"
+              ></textarea>
+              <div class="lesson-notes__count">
+                {{ formatNumber(noteText().length) }} / {{ formatNumber(4000) }}
+              </div>
+            </section>
+          </section>
+
+          <aside class="playlist" aria-labelledby="playlist-title">
+            <div class="playlist-heading">
+              <div>
+                <span>{{ i18n.t('coursePathHeading') }}</span>
+                <h2 id="playlist-title">{{ i18n.t('courseLessons') }}</h2>
+              </div>
+              <span class="playlist-count">{{ formatNumber(lessonRows().length) }}</span>
+            </div>
+            <div class="playlist-items">
+              @for (row of lessonRows(); track row.lesson.id; let index = $index) {
+                <div class="playlist-entry">
+                  @if (isUnlocked(row.lesson.id)) {
+                    <a
+                      class="playlist-row"
+                      [class.playlist-row--active]="isCurrent(row.lesson.id)"
+                      [routerLink]="['/courses', item.id, 'lessons', row.lesson.id]"
+                    >
+                      <span class="playlist-index">
+                        @if (isLessonCompleted(row.lesson.id)) {
+                          ✓
+                        } @else {
+                          {{ formatNumber(index + 1) }}
+                        }
+                      </span>
+                      <span class="playlist-copy"
+                        ><small>{{ i18n.sectionTitle(row.section) }}</small
+                        ><strong>{{ i18n.lessonTitle(row.lesson) }}</strong
+                        ><span>{{ formatDuration(row.lesson.durationSec) }}</span></span
+                      >
+                      @if (isCurrent(row.lesson.id)) {
+                        <span
+                          class="playlist-active-dot"
+                          [attr.aria-label]="i18n.t('currentLesson')"
+                        ></span>
+                      }
+                    </a>
+                  } @else {
+                    <div class="playlist-row playlist-row--locked" aria-disabled="true">
+                      <span class="playlist-index playlist-index--locked">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <rect
+                            x="5"
+                            y="10"
+                            width="14"
+                            height="11"
+                            rx="2"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                          />
+                          <path
+                            d="M8 10V7a4 4 0 1 1 8 0v3"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+                      <span class="playlist-copy"
+                        ><small>{{ i18n.sectionTitle(row.section) }}</small
+                        ><strong>{{ i18n.lessonTitle(row.lesson) }}</strong
+                        ><span
+                          >{{ formatDuration(row.lesson.durationSec) }} ·
+                          {{ i18n.t('locked') }}</span
+                        ></span
+                      >
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="playlist-footnote">
+              <span aria-hidden="true">◷</span> {{ i18n.t('progressAutoSaved') }}
+            </div>
+          </aside>
+        </div>
+      </div>
+    }
+  }
+}

@@ -1,0 +1,226 @@
+@if (courseData.status() === 'loading' || courseData.status() === 'idle') {
+  <app-ui-state
+    kind="loading"
+    [title]="i18n.t('courseLoadingTitle')"
+    [message]="i18n.t('courseLoadingMessage')"
+  />
+} @else if (courseData.status() === 'error') {
+  <app-ui-state
+    kind="error"
+    [title]="i18n.t('courseErrorTitle')"
+    [message]="i18n.t('coursesErrorMessage')"
+    [actionLabel]="i18n.t('retry')"
+    (action)="retry()"
+  />
+} @else if (!course()) {
+  <app-ui-state
+    kind="not-found"
+    [title]="i18n.t('courseNotFoundTitle')"
+    [message]="i18n.t('courseNotFoundMessage')"
+  />
+} @else {
+  @if (course(); as item) {
+    <div class="details-page">
+      <nav class="breadcrumbs" [attr.aria-label]="i18n.t('breadcrumbs')">
+        <a routerLink="/courses">{{ i18n.t('courses') }}</a
+        ><span aria-hidden="true">›</span>
+        <span>{{ i18n.courseTitle(item) }}</span>
+      </nav>
+
+      @if (lockedMessage()) {
+        <div class="locked-notice" role="status">
+          <span class="locked-notice__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="5"
+                y="10"
+                width="14"
+                height="11"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+              <path
+                d="M8 10V7a4 4 0 1 1 8 0v3"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          <span
+            ><strong>{{ i18n.t('lockedNoticeTitle') }}</strong
+            ><small>{{ i18n.t('lockedNoticeMessage') }}</small></span
+          >
+          <button
+            type="button"
+            [attr.aria-label]="i18n.t('dismissMessage')"
+            (click)="lockedMessage.set(false)"
+          >
+            ×
+          </button>
+        </div>
+      }
+
+      <section class="course-summary">
+        <div class="course-summary__copy">
+          <span class="course-kicker"><span>✳</span> {{ i18n.t('healthLearningPath') }}</span>
+          <h1>{{ i18n.courseTitle(item) }}</h1>
+          <p class="course-description">{{ i18n.courseDescription(item) }}</p>
+          <div class="course-summary__meta">
+            <span class="teacher-avatar">{{ i18n.instructorInitial(item) }}</span>
+            <span class="teacher-copy"
+              ><small>{{ i18n.t('taughtBy') }}</small
+              ><strong>{{ i18n.instructorName(item) }}</strong></span
+            >
+            <span class="meta-divider"></span>
+            <span class="hero-fact">{{ lessonCountLabel(lessons().length) }}</span>
+            <span class="hero-fact">{{
+              i18n.t('sectionsCount', { count: formatNumber(item.sections.length) })
+            }}</span>
+            >
+          </div>
+        </div>
+        <aside class="summary-progress" [attr.aria-label]="i18n.t('courseProgress')">
+          <strong class="summary-progress__percent">{{ formatPercent(progressPercent()) }}</strong>
+          <span class="summary-progress__label">{{ i18n.t('completedLessons') }}</span>
+          <div
+            class="hero-progress__track"
+            role="progressbar"
+            [attr.aria-valuenow]="progressPercent()"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <span [style.width.%]="progressPercent()"></span>
+          </div>
+          <small
+            >{{ formatNumber(completedLessonCount()) }} /
+            {{ formatNumber(lessons().length) }}</small
+          >
+        </aside>
+      </section>
+
+      <section class="lesson-list-section" aria-labelledby="lessons-title">
+        <div class="lesson-list-heading">
+          <div>
+            <span class="eyebrow">{{ i18n.t('courseContent') }}</span>
+            <h2 id="lessons-title">{{ i18n.t('sectionsAndLessons') }}</h2>
+          </div>
+          <div class="lesson-list-heading__aside">
+            <span class="total-lessons">{{ lessonCountLabel(lessons().length) }}</span>
+            <small>{{ i18n.t('unlockRule') }}</small>
+          </div>
+        </div>
+
+        @if (lessons().length === 0) {
+          <app-ui-state
+            kind="empty"
+            [title]="i18n.t('noLessonsTitle')"
+            [message]="i18n.t('noLessonsMessage')"
+          />
+        } @else {
+          <div class="section-stack">
+            @for (section of item.sections; track section.id; let sectionIndex = $index) {
+              <article class="lesson-section" [class.lesson-section--open]="isExpanded(section.id)">
+                <button
+                  class="section-toggle"
+                  type="button"
+                  (click)="toggleSection(section.id)"
+                  [attr.aria-expanded]="isExpanded(section.id)"
+                  [attr.aria-controls]="'section-' + safeId(section.id)"
+                >
+                  <span class="section-number">{{ formatNumber(sectionIndex + 1) }}</span>
+                  <span class="section-title"
+                    ><strong>{{ i18n.sectionTitle(section) }}</strong
+                    ><small>{{ lessonCountLabel(section.lessons.length) }}</small></span
+                  >
+                  <span class="section-chevron" aria-hidden="true">{{
+                    isExpanded(section.id) ? '−' : '+'
+                  }}</span>
+                </button>
+                @if (isExpanded(section.id)) {
+                  <div class="section-lessons" [id]="'section-' + safeId(section.id)">
+                    @for (lesson of section.lessons; track lesson.id; let lessonIndex = $index) {
+                      @if (isUnlocked(lesson.id)) {
+                        <a
+                          class="lesson-row"
+                          [class.lesson-row--current]="status(lesson.id) === 'in-progress'"
+                          [routerLink]="['/courses', item.id, 'lessons', lesson.id]"
+                        >
+                          <span class="lesson-row__leading">
+                            @if (status(lesson.id) === 'completed') {
+                              <span
+                                class="lesson-check"
+                                [attr.aria-label]="i18n.t('statusCompleted')"
+                                >✓</span
+                              >
+                            } @else {
+                              <span class="lesson-play" [attr.aria-label]="i18n.t('play')">▶</span>
+                            }
+                          </span>
+                          <span class="lesson-row__copy"
+                            ><strong>{{ i18n.lessonTitle(lesson) }}</strong
+                            ><small>{{
+                              i18n.t('lessonNumber', { number: formatNumber(lessonIndex + 1) })
+                            }}</small></span
+                          >
+                          <span class="lesson-row__duration"
+                            >◷ {{ formatDuration(lesson.durationSec) }}</span
+                          >
+                          <span
+                            class="lesson-status"
+                            [class.lesson-status--done]="status(lesson.id) === 'completed'"
+                            [class.lesson-status--active]="status(lesson.id) === 'in-progress'"
+                            >{{ statusLabel(lesson.id) }}</span
+                          >
+                          <span class="lesson-row__arrow" aria-hidden="true">{{
+                            i18n.direction() === 'rtl' ? '←' : '→'
+                          }}</span>
+                        </a>
+                      } @else {
+                        <div class="lesson-row lesson-row--locked" aria-disabled="true">
+                          <span class="lesson-row__leading"
+                            ><span class="lesson-lock" [attr.aria-label]="i18n.t('locked')">
+                              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <rect
+                                  x="5"
+                                  y="10"
+                                  width="14"
+                                  height="11"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                />
+                                <path
+                                  d="M8 10V7a4 4 0 1 1 8 0v3"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                  stroke-linecap="round"
+                                />
+                              </svg> </span
+                          ></span>
+                          <span class="lesson-row__copy"
+                            ><strong>{{ i18n.lessonTitle(lesson) }}</strong
+                            ><small>{{
+                              i18n.t('lessonNumber', { number: formatNumber(lessonIndex + 1) })
+                            }}</small></span
+                          >
+                          <span class="lesson-row__duration"
+                            >◷ {{ formatDuration(lesson.durationSec) }}</span
+                          >
+                          <span class="lesson-status lesson-status--locked">{{
+                            i18n.t('locked')
+                          }}</span>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  }
+}

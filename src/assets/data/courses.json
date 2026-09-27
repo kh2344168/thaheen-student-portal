@@ -1,0 +1,124 @@
+[
+  {
+    "id": "movement-system",
+    "title": "مدخل إلى الجهاز الحركي",
+    "titleEn": "Introduction to the Musculoskeletal System",
+    "instructor": "د. سارة محمود",
+    "instructorEn": "Dr. Sarah Mahmoud",
+    "description": "تعرّف على العظام والمفاصل والعضلات، وكيف تعمل معًا لتمنح الجسم الحركة والثبات.",
+    "descriptionEn": "Explore bones, joints, and muscles, and learn how they work together to support movement and stability.",
+    "thumbnail": "assets/images/anatomy-course.svg",
+    "sections": [
+      {
+        "id": "bones-and-joints",
+        "title": "العظام والمفاصل",
+        "titleEn": "Bones and Joints",
+        "lessons": [
+          {
+            "id": "bone-structure",
+            "title": "تركيب العظم ووظائفه",
+            "titleEn": "Bone Structure and Functions",
+            "durationSec": 95,
+            "video": "assets/videos/bones.mp4"
+          },
+          {
+            "id": "joint-types",
+            "title": "أنواع المفاصل وحركتها",
+            "titleEn": "Types of Joints and Their Movement",
+            "durationSec": 95,
+            "video": "assets/videos/bones.mp4"
+          },
+          {
+            "id": "spinal-column",
+            "title": "العمود الفقري",
+            "titleEn": "The Spine",
+            "durationSec": 95,
+            "video": "assets/videos/bones.mp4"
+          }
+        ]
+      },
+      {
+        "id": "muscles-and-motion",
+        "title": "العضلات والحركة",
+        "titleEn": "Muscles and Movement",
+        "lessons": [
+          {
+            "id": "muscle-types",
+            "title": "أنواع العضلات في الجسم",
+            "titleEn": "Types of Muscles in the Body",
+            "durationSec": 95,
+            "video": "assets/videos/bones.mp4"
+          },
+          {
+            "id": "movement-basics",
+            "title": "كيف تصنع العضلات الحركة؟",
+            "titleEn": "How Do Muscles Create Movement?",
+            "durationSec": 95,
+            "video": "assets/videos/bones.mp4"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "circulatory-system",
+    "title": "أساسيات الجهاز الدوري",
+    "titleEn": "Circulatory System Basics",
+    "instructor": "د. ياسر عادل",
+    "instructorEn": "Dr. Yasser Adel",
+    "description": "نظرة سهلة على القلب والدورة الدموية ومكوّنات الدم ودورها في الحفاظ على صحة الجسم.",
+    "descriptionEn": "A simple overview of the heart, circulation, and blood, and how they help keep the body healthy.",
+    "thumbnail": "assets/images/circulation-course.svg",
+    "sections": [
+      {
+        "id": "heart",
+        "title": "القلب ووظيفته",
+        "titleEn": "The Heart and Its Function",
+        "lessons": [
+          {
+            "id": "heart-chambers",
+            "title": "حجرات القلب الأربع",
+            "titleEn": "The Four Chambers of the Heart",
+            "durationSec": 95,
+            "video": "assets/videos/heart.mp4"
+          },
+          {
+            "id": "heart-cycle",
+            "title": "دورة القلب في نبضة واحدة",
+            "titleEn": "The Cardiac Cycle in One Heartbeat",
+            "durationSec": 95,
+            "video": "assets/videos/heart.mp4"
+          },
+          {
+            "id": "heart-valves",
+            "title": "الصمامات واتجاه تدفق الدم",
+            "titleEn": "Heart Valves and Blood Flow",
+            "durationSec": 95,
+            "video": "assets/videos/heart.mp4"
+          }
+        ]
+      },
+      {
+        "id": "blood-and-circulation",
+        "title": "الدم والدورة الدموية",
+        "titleEn": "Blood and Circulation",
+        "lessons": [
+          {
+            "id": "blood-components",
+            "title": "مكوّنات الدم الأساسية",
+            "titleEn": "The Main Components of Blood",
+            "durationSec": 95,
+            "video": "assets/videos/blood.mp4"
+          },
+          {
+            "id": "pulse-and-flow",
+            "title": "النبض ومسار الدورة الدموية",
+            "titleEn": "Pulse and the Circulatory Pathway",
+            "durationSec": 95,
+            "video": "assets/videos/blood.mp4"
+          }
+        ]
+      }
+    ]
+  }
+]

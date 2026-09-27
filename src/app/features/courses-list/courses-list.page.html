@@ -1,0 +1,156 @@
+<section class="courses-page" aria-labelledby="courses-title">
+  @if (courseData.status() === 'loading' || courseData.status() === 'idle') {
+    <app-ui-state
+      kind="loading"
+      [title]="i18n.t('coursesLoadingTitle')"
+      [message]="i18n.t('coursesLoadingMessage')"
+    />
+  } @else if (courseData.status() === 'error') {
+    <app-ui-state
+      kind="error"
+      [title]="i18n.t('coursesErrorTitle')"
+      [message]="i18n.t('coursesErrorMessage')"
+      [actionLabel]="i18n.t('retry')"
+      (action)="retry()"
+    />
+  } @else if (courseData.courses().length === 0) {
+    <app-ui-state
+      kind="empty"
+      [title]="i18n.t('coursesEmptyTitle')"
+      [message]="i18n.t('coursesEmptyMessage')"
+    />
+  } @else {
+    <div class="page-heading">
+      <div>
+        <h1 id="courses-title">{{ i18n.t('welcomeTitle') }}</h1>
+      </div>
+    </div>
+
+    @if (continueWatching(); as item) {
+      <section class="continue-card" aria-labelledby="continue-title">
+        <div class="continue-card__content">
+          <div class="continue-card__label">
+            <span class="play-pip">▶</span> {{ i18n.t('continueWatching') }}
+          </div>
+          <p class="continue-card__course">{{ i18n.courseTitle(item.course) }}</p>
+          <h2 id="continue-title">{{ i18n.lessonTitle(item.lesson) }}</h2>
+          <p class="continue-card__meta">
+            {{ i18n.t('instructorPrefix') }} {{ i18n.instructorName(item.course) }} <span>·</span>
+            {{ formatDuration(item.lesson.durationSec) }}
+          </p>
+          <div class="continue-progress" [attr.aria-label]="i18n.t('courseProgress')">
+            <div class="continue-progress__track">
+              <span [style.width.%]="continuePercent()"></span>
+            </div>
+            <span>{{ formatPercent(continuePercent()) }}</span>
+          </div>
+          <a
+            class="continue-button"
+            [routerLink]="['/courses', item.course.id, 'lessons', item.lesson.id]"
+          >
+            <span>{{ i18n.t('continueAction') }}</span>
+            <span class="continue-button__arrow" aria-hidden="true">{{
+              i18n.direction() === 'rtl' ? '←' : '→'
+            }}</span>
+          </a>
+        </div>
+        <div class="continue-card__visual">
+          <img [src]="item.course.thumbnail" [alt]="i18n.courseTitle(item.course)" />
+          <span class="visual-caption"
+            ><span class="visual-caption__dot"></span> {{ i18n.t('lastLesson') }}</span
+          >
+        </div>
+        <span class="continue-card__ornament" aria-hidden="true">✳</span>
+      </section>
+    }
+
+    <div class="courses-section-heading">
+      <div>
+        <h2>{{ i18n.t('coursesHeading') }}</h2>
+        <p>{{ i18n.t('coursesDescription') }}</p>
+      </div>
+      <span class="course-count">{{
+        i18n.t('courseCount', { count: formatNumber(courseData.courses().length) })
+      }}</span>
+    </div>
+
+    <label class="course-search">
+      <span class="course-search__icon" aria-hidden="true">⌕</span>
+      <span class="course-search__label">{{ i18n.t('searchCourses') }}</span>
+      <input
+        type="search"
+        [value]="searchTerm()"
+        [placeholder]="i18n.t('searchPlaceholder')"
+        [attr.aria-label]="i18n.t('searchCourses')"
+        (input)="onSearch($event)"
+      />
+    </label>
+
+    @if (cards().length === 0) {
+      <app-ui-state
+        kind="empty"
+        [title]="i18n.t('searchEmptyTitle')"
+        [message]="i18n.t('searchEmptyMessage')"
+      />
+    } @else {
+      <div class="course-grid">
+        @for (card of cards(); track card.course.id) {
+          <article class="course-card">
+            <a
+              class="course-card__image"
+              [routerLink]="['/courses', card.course.id]"
+              [attr.aria-label]="i18n.t('viewCourse') + ': ' + i18n.courseTitle(card.course)"
+            >
+              <img [src]="card.course.thumbnail" [alt]="i18n.courseTitle(card.course)" />
+              <span class="course-card__image-label"
+                >{{ i18n.t('healthSciences') }} <span>✳</span></span
+              >
+            </a>
+            <div class="course-card__body">
+              <div class="course-card__topline">
+                <span>{{ i18n.t('coursePath') }}</span
+                ><span class="course-card__spark" aria-hidden="true">✳</span>
+              </div>
+              <h3>
+                <a [routerLink]="['/courses', card.course.id]">{{
+                  i18n.courseTitle(card.course)
+                }}</a>
+              </h3>
+              <p class="course-instructor">
+                <span class="instructor-dot" aria-hidden="true">{{
+                  i18n.instructorInitial(card.course)
+                }}</span>
+                {{ i18n.instructorName(card.course) }}
+              </p>
+              <div class="course-facts">
+                <span
+                  ><span class="fact-icon" aria-hidden="true">▤</span
+                  >{{ i18n.t('lessonsCount', { count: formatNumber(card.lessonCount) }) }}</span
+                >
+                <span
+                  ><span class="fact-icon" aria-hidden="true">◷</span
+                  >{{ formatDuration(card.lessonCount * 95) }}</span
+                >
+              </div>
+              <div class="course-progress">
+                <div class="course-progress__label">
+                  <span>{{ i18n.t('courseProgress') }}</span
+                  ><strong>{{ formatPercent(card.progress) }}</strong>
+                </div>
+                <div class="course-progress__track">
+                  <span [style.width.%]="card.progress"></span>
+                </div>
+              </div>
+              <a class="course-link" [routerLink]="['/courses', card.course.id]">
+                <span>{{ i18n.t('viewCourse') }}</span
+                ><span class="course-link__arrow" aria-hidden="true">{{
+                  i18n.direction() === 'rtl' ? '←' : '→'
+                }}</span>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

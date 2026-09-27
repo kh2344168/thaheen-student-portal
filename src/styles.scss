@@ -1,0 +1,248 @@
+:root {
+  color-scheme: light;
+  --aubergine: #32243a;
+  --ivory: #f7f5ef;
+  --chartreuse: #d5e889;
+  --chartreuse-strong: #c4dc72;
+  --chartreuse-soft: #edf2d9;
+  --terracotta: #c77b67;
+  --terracotta-soft: #f3e8e3;
+  --terracotta-ink: #88594e;
+  --accent-ink: #617443;
+  --ink: #302a32;
+  --heading: var(--aubergine);
+  --muted: #817982;
+  --line: #e7e1d8;
+  --surface: #fffefa;
+  --surface-muted: #efede6;
+  --success: #596f3f;
+  --danger: #9f4e43;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --ivory: #17131a;
+  --chartreuse-strong: #cbe37d;
+  --chartreuse-soft: #343d2a;
+  --terracotta-soft: #49343a;
+  --terracotta-ink: #e6b2a7;
+  --accent-ink: #d4e6a0;
+  --ink: #f1edf4;
+  --heading: #f1eaf4;
+  --muted: #b7adbd;
+  --line: #43394a;
+  --surface: #241f29;
+  --surface-muted: #302a35;
+  --success: #c3d997;
+  --danger: #f0aaa0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--ivory);
+}
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: var(--ivory);
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  color: inherit;
+}
+a {
+  color: inherit;
+}
+img,
+video {
+  max-width: 100%;
+}
+::selection {
+  color: var(--aubergine);
+  background: var(--chartreuse);
+}
+:focus-visible {
+  outline: 3px solid #8aa84f;
+  outline-offset: 3px;
+}
+
+html[data-theme='dark'] .heading-note,
+html[data-theme='dark'] .course-card__body,
+html[data-theme='dark'] .course-hero,
+html[data-theme='dark'] .lesson-section,
+html[data-theme='dark'] .player-bottom,
+html[data-theme='dark'] .playlist,
+html[data-theme='dark'] .lesson-notes,
+html[data-theme='dark'] .back-to-course {
+  border-color: var(--line);
+  background-color: var(--surface);
+}
+
+html[data-theme='dark'] .site-header {
+  border-color: var(--line);
+}
+
+html[data-theme='dark'] .profile-chip__avatar,
+html[data-theme='dark'] .section-number,
+html[data-theme='dark'] .lesson-play,
+html[data-theme='dark'] .lesson-lock,
+html[data-theme='dark'] .playlist-index,
+html[data-theme='dark'] .playlist-index--locked,
+html[data-theme='dark'] .section-toggle:hover,
+html[data-theme='dark'] .lesson-row--current,
+html[data-theme='dark'] a.lesson-row:hover,
+html[data-theme='dark'] a.playlist-row:hover,
+html[data-theme='dark'] .playlist-row--active {
+  border-color: var(--line);
+  background-color: var(--surface-muted);
+}
+
+html[data-theme='dark'] .page-heading h1,
+html[data-theme='dark'] .heading-note strong,
+html[data-theme='dark'] .courses-section-heading h2,
+html[data-theme='dark'] .course-card h3,
+html[data-theme='dark'] .course-card h3 a,
+html[data-theme='dark'] .course-progress__label strong,
+html[data-theme='dark'] .course-link,
+html[data-theme='dark'] .breadcrumbs span:last-child,
+html[data-theme='dark'] .breadcrumbs a:hover,
+html[data-theme='dark'] .art-note,
+html[data-theme='dark'] .course-hero h1,
+html[data-theme='dark'] .teacher-copy strong,
+html[data-theme='dark'] .hero-progress__label strong,
+html[data-theme='dark'] .lesson-list-heading h2,
+html[data-theme='dark'] .section-title strong,
+html[data-theme='dark'] .section-number,
+html[data-theme='dark'] .lesson-play,
+html[data-theme='dark'] .section-chevron,
+html[data-theme='dark'] .lesson-row__copy strong,
+html[data-theme='dark'] .player-heading h1,
+html[data-theme='dark'] .back-to-course,
+html[data-theme='dark'] .lesson-summary h2,
+html[data-theme='dark'] .lesson-notes__heading h2,
+html[data-theme='dark'] .playlist-heading h2,
+html[data-theme='dark'] .playlist-copy strong,
+html[data-theme='dark'] .brand,
+html[data-theme='dark'] .main-nav a.is-active,
+html[data-theme='dark'] .profile-chip {
+  color: var(--heading);
+}
+
+html[data-theme='dark'] .eyebrow,
+html[data-theme='dark'] .courses-section-heading p,
+html[data-theme='dark'] .course-instructor,
+html[data-theme='dark'] .course-facts,
+html[data-theme='dark'] .course-count,
+html[data-theme='dark'] .course-card__topline,
+html[data-theme='dark'] .breadcrumbs,
+html[data-theme='dark'] .breadcrumbs a,
+html[data-theme='dark'] .course-description,
+html[data-theme='dark'] .hero-fact,
+html[data-theme='dark'] .hero-progress__label,
+html[data-theme='dark'] .total-lessons,
+html[data-theme='dark'] .section-title small,
+html[data-theme='dark'] .lesson-row__copy small,
+html[data-theme='dark'] .lesson-row__duration,
+html[data-theme='dark'] .player-heading p,
+html[data-theme='dark'] .player-kicker,
+html[data-theme='dark'] .lesson-summary p,
+html[data-theme='dark'] .playlist-heading span:first-child,
+html[data-theme='dark'] .playlist-copy small,
+html[data-theme='dark'] .playlist-copy > span,
+html[data-theme='dark'] .playlist-footnote,
+html[data-theme='dark'] .lesson-notes__heading p,
+html[data-theme='dark'] .lesson-notes__heading > span,
+html[data-theme='dark'] .lesson-notes__count,
+html[data-theme='dark'] .site-footer {
+  color: var(--muted);
+}
+
+html[data-theme='dark'] .course-search,
+html[data-theme='dark'] .section-toggle,
+html[data-theme='dark'] .lesson-row,
+html[data-theme='dark'] .playlist-row,
+html[data-theme='dark'] .header-toggle {
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .course-search,
+html[data-theme='dark'] .lesson-notes textarea {
+  border-color: var(--line);
+  background: var(--surface-muted);
+}
+
+html[data-theme='dark'] .lesson-status,
+html[data-theme='dark'] .completed-note,
+html[data-theme='dark'] .course-kicker,
+html[data-theme='dark'] .summary-mark,
+html[data-theme='dark'] .playlist-count,
+html[data-theme='dark'] .heading-note__mark {
+  border-color: var(--line);
+  background: #343d2a;
+  color: #d4e6a0;
+}
+
+html[data-theme='dark'] .locked-notice {
+  border-color: color-mix(in srgb, var(--terracotta) 40%, var(--line));
+  background: var(--terracotta-soft);
+  color: var(--heading);
+}
+
+html[data-theme='dark'] .course-summary,
+html[data-theme='dark'] .summary-progress,
+html[data-theme='dark'] .lesson-section {
+  border-color: var(--line);
+  background-color: var(--surface);
+}
+
+html[data-theme='dark'] .summary-progress {
+  background-color: var(--surface-muted);
+}
+
+html[data-theme='dark'] .lesson-row--current {
+  background-color: var(--chartreuse-soft);
+}
+
+html[data-theme='dark'] .course-hero__art::before {
+  background: #302a35;
+}
+
+html[data-theme='dark'] .lesson-row--locked .lesson-row__copy strong,
+html[data-theme='dark'] .playlist-row--locked .playlist-copy strong,
+html[data-theme='dark'] .lesson-row--locked .lesson-row__duration,
+html[data-theme='dark'] .playlist-row--locked .playlist-copy > span {
+  color: #a59bab;
+}
+
+html[data-theme='dark'] .lesson-status--locked {
+  background: transparent;
+  color: #a59bab;
+}
+
+html[data-theme='dark'] .next-button:disabled {
+  background: #39333d;
+  color: #bdb5c2;
+}
+
+html[data-theme='dark'] .next-button:disabled small,
+html[data-theme='dark'] .next-button:disabled .next-button__arrow {
+  color: #bdb5c2;
+}

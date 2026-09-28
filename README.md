@@ -2,6 +2,8 @@
 
 An Arabic-first, offline learning portal for health-sciences students. Course data, thumbnails, and MP4s are bundled in `src/assets`; the app makes no backend or external API calls.
 
+**Live demo:** https://kh2344168.github.io/thaheen-student-portal/
+
 ## Run locally
 
 Tested with Node.js `24.19.0`, npm `11.9.0`, and Angular `22.2.0`.
@@ -17,6 +19,10 @@ Open `http://localhost:4200/courses`. `npm start` runs the same command.
 npm run build
 npm test -- --watch=false
 ```
+
+## Deployment
+
+GitHub Actions builds and publishes the app to GitHub Pages on each push to `main`. The deployment uses `/thaheen-student-portal/` as its base path and a `404.html` copy of the app shell so opening a lesson URL directly loads the Angular route. GitHub Pages may return an HTTP 404 status for those direct URLs even though the page renders. The hosted demo still needs an internet connection to load initially; no PWA cache is included.
 
 ## Features
 
